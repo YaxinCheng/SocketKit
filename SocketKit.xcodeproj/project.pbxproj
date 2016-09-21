@@ -10,6 +10,8 @@
 		E38B43F61D932F65008AF91D /* SocketKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E38B43EC1D932F65008AF91D /* SocketKit.framework */; };
 		E38B43FB1D932F65008AF91D /* SocketKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38B43FA1D932F65008AF91D /* SocketKitTests.swift */; };
 		E38B43FD1D932F65008AF91D /* SocketKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E38B43EF1D932F65008AF91D /* SocketKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E38B44071D932F83008AF91D /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38B44061D932F83008AF91D /* Socket.swift */; };
+		E38B44091D933F90008AF91D /* SocketError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38B44081D933F90008AF91D /* SocketError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		E38B43F51D932F65008AF91D /* SocketKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SocketKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E38B43FA1D932F65008AF91D /* SocketKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketKitTests.swift; sourceTree = "<group>"; };
 		E38B43FC1D932F65008AF91D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E38B44061D932F83008AF91D /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		E38B44081D933F90008AF91D /* SocketError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				E38B43EF1D932F65008AF91D /* SocketKit.h */,
+				E38B44061D932F83008AF91D /* Socket.swift */,
+				E38B44081D933F90008AF91D /* SocketError.swift */,
 				E38B43F01D932F65008AF91D /* Info.plist */,
 			);
 			path = SocketKit;
@@ -148,6 +154,7 @@
 				TargetAttributes = {
 					E38B43EB1D932F65008AF91D = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					E38B43F41D932F65008AF91D = {
@@ -196,6 +203,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E38B44071D932F83008AF91D /* Socket.swift in Sources */,
+				E38B44091D933F90008AF91D /* SocketError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +329,7 @@
 		E38B44011D932F65008AF91D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -331,6 +341,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ycheng.SocketKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -338,6 +349,7 @@
 		E38B44021D932F65008AF91D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -356,6 +368,7 @@
 		E38B44041D932F65008AF91D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = SocketKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ycheng.SocketKitTests;
@@ -367,6 +380,7 @@
 		E38B44051D932F65008AF91D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = SocketKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ycheng.SocketKitTests;
