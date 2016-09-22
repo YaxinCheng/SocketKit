@@ -8,8 +8,9 @@
 
 import Foundation
 
-enum SocketError: Error {
+public enum SocketError: Error {
 	case connectionFailed
 	case dataEncodingFailed
 	case notWritable
+	case notConnected
 }
