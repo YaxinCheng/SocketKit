@@ -9,15 +9,45 @@
 import Foundation
 
 public final class Socket: NSObject, StreamDelegate {
+	/**
+	Destination socket address
+	*/
 	public let address: String
+	/**
+	Destination socket port
+	*/
 	public let port: Int
+	/**
+	Input stream from the socket
+	*/
 	private var inStream: InputStream?
+	/**
+	Output stream from the socket
+	*/
 	private var outStream: OutputStream?
+	/**
+	Buffer from the socket
+	*/
 	private var buffer: [UInt8]
+	/**
+	The connection status of the socket
+	*/
 	public var isConnected: Bool
+	/**
+	The writability of the socket
+	*/
 	private var isWritable: Bool
+	/**
+	A callback closure when new value is read from the socket
+	*/
 	private var readComplete: ((String?) -> Void)?
 	
+	/**
+	Constructor of a socket connector.
+	- Parameter address: A string value specify which socket address needs to be connected to
+	- Parameter port: An int value about the port opens
+	- throws: Failed connection to socket: SocketError.connectionFailed
+	*/
 	public init(address: String, port: Int) throws {
 		isConnected = false
 		isWritable = false
@@ -35,6 +65,13 @@ public final class Socket: NSObject, StreamDelegate {
 		outStream?.open()
 	}
 	
+	/**
+	Function accepts a string value and writes to the socket side
+	- parameter value: A string value needs to be written
+	- throws: Socket is not connected: Socket.notConnected
+		Socket is not writable: SocketError.notWritable
+		Failed to encode the string: SocketError.dataEncodingFailed
+	*/
 	public func write(value: String) throws {
 		guard isConnected else { throw SocketError.notConnected }
 		guard isWritable else { throw SocketError.notWritable }
@@ -42,6 +79,11 @@ public final class Socket: NSObject, StreamDelegate {
 		_ = data.withUnsafeBytes { outStream?.write($0, maxLength: data.count) }
 	}
 	
+	/**
+	Function accepts a call back closure and read value from socket side
+	- parameter complete: A call back closure accepts a string value from server
+	- throws: Socket is not connected: Socket.notConnected
+	*/
 	public func read(complete: @escaping (String?) -> Void) throws {
 		guard isConnected else { throw SocketError.notConnected }
 		readComplete = complete
