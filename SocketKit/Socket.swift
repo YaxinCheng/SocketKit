@@ -38,10 +38,14 @@ public final class Socket: NSObject, StreamDelegate {
 	*/
 	private var isWritable: Bool
 	/**
-	A callback closure when new value is read from the socket
+	Callback closures when new value is read from the socket
 	*/
 	private var readComplete: ((String?) -> Void)?
-	
+	private var readDataComplete: ((Data?) -> Void)? = nil
+	/**
+	A separate queue for socket events
+	*/
+	private let queue: DispatchQueue
 	/**
 	Constructor of a socket connector.
 	- Parameter address: A string value specify which socket address needs to be connected to
@@ -49,6 +53,7 @@ public final class Socket: NSObject, StreamDelegate {
 	- throws: Failed connection to socket: SocketError.connectionFailed
 	*/
 	public init(address: String, port: Int) throws {
+		queue = DispatchQueue(label: "socketQueue")
 		isConnected = false
 		isWritable = false
 		buffer = [UInt8](repeating: 0, count: 200)
@@ -76,7 +81,23 @@ public final class Socket: NSObject, StreamDelegate {
 		guard isConnected else { throw SocketError.notConnected }
 		guard isWritable else { throw SocketError.notWritable }
 		guard let data = value.data(using: .utf8) else { throw SocketError.dataEncodingFailed }
-		_ = data.withUnsafeBytes { outStream?.write($0, maxLength: data.count) }
+		try! write(data: data)
+	}
+	
+	/**
+	Function accepts a string value and writes to the socket side
+	- parameter data: A binary data value needs to be written
+	- throws: Socket is not connected: Socket.notConnected
+		Socket is not writable: SocketError.notWritable
+	*/
+	public func write(data: Data) throws {
+		guard isConnected else { throw SocketError.notConnected }
+		guard isWritable else { throw SocketError.notWritable }
+		queue.async {
+				_ = data.withUnsafeBytes { [weak self] in
+					self?.outStream?.write($0, maxLength: data.count)
+			}
+		}
 	}
 	
 	/**
@@ -86,7 +107,19 @@ public final class Socket: NSObject, StreamDelegate {
 	*/
 	public func read(complete: @escaping (String?) -> Void) throws {
 		guard isConnected else { throw SocketError.notConnected }
+		readDataComplete = nil
 		readComplete = complete
+	}
+	
+	/**
+	Function accepts a call back closure and read value from socket side
+	- parameter complete: A call back closure accepts a binary data value from server
+	- throws: Socket is not connected: Socket.notConnected
+	*/
+	public func readData(complete: @escaping (Data?) -> Void) throws {
+		guard isConnected else { throw SocketError.notConnected }
+		readComplete = nil
+		readDataComplete = complete
 	}
 	
 	public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
@@ -94,9 +127,20 @@ public final class Socket: NSObject, StreamDelegate {
 		case Stream.Event.openCompleted:// Successfully connected
 			isConnected = true
 		case Stream.Event.hasBytesAvailable:// Read in value from socket
-			inStream?.read(&buffer, maxLength: buffer.count)
-			let valueRead = String(bytes: buffer, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
-			readComplete?(valueRead)
+			queue.async { [unowned self] in
+				self.inStream?.read(&self.buffer, maxLength: self.buffer.count)
+				if let complete = self.readDataComplete {
+					let data = Data(bytes: self.buffer)
+					DispatchQueue.main.async {
+							complete(data)
+					}
+				} else {
+					let valueRead = String(bytes: self.buffer, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+					DispatchQueue.main.async {
+							self.readComplete?(valueRead)
+					}
+				}
+			}
 		case Stream.Event.hasSpaceAvailable:// Check socket writable
 			isWritable = true
 		case Stream.Event.endEncountered, Stream.Event.errorOccurred:// Connection closed by server or failed connection

@@ -408,6 +408,7 @@
 				E38B44021D932F65008AF91D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E38B44031D932F65008AF91D /* Build configuration list for PBXNativeTarget "SocketKitTests" */ = {
 			isa = XCConfigurationList;
@@ -416,6 +417,7 @@
 				E38B44051D932F65008AF91D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
