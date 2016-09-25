@@ -48,6 +48,12 @@ public func read(complete: @escaping (String?) -> Void) throws { ... }
 This function accepts a call back closure, which will be called when value is read from socket server side<br>
 The closure accepts an optional string, and may throw out a SocketError.notConnected if the socket lost connection
 
+```swift
+public func readData(complete: @escaping (Data?) -> Void) throws { ... }
+```
+This function returns the raw data from the socket through the callback closure. <br>
+SocketError.notConnectedd may be thrown if connection is lost
+
 #### Write to socket
 ``` swift
 public func write(value: String) throws { ... }
@@ -56,6 +62,13 @@ This function accepts an UTF-8 string value, and encode the string to binary dat
 SocketError.notConnected may be thrown if the socket connection is lost<br>
 SocketError.notWritable may be thrown if the socket is not allowed to write values<br>
 SocketError.dataEncodingFailed may be thrown if the string value cannot be encoded<br>
+
+```swift
+public func write(data: Data) throws { ... }
+```
+This function accepts a data value and writes to the socket<br>
+SocketError.notConnected may be thrown if the socket connection is lost<br>
+SocketError.notWritable may be thrown if the socket is not allowed to write values<br>
 
 #### Connection status
 ``` swift
